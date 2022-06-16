@@ -3,9 +3,9 @@ import os
 p.font.init()
 p.mixer.init()
 
-WINDOW_WIDTH = 900
-WINDOW_HEIGHT = 500
-screen = p.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+SPACE_WINDOW_WIDTH = 900
+SPACE_WINDOW_HEIGHT = 500
+screen = p.display.set_mode((SPACE_WINDOW_WIDTH, SPACE_WINDOW_HEIGHT))
 p.display.set_caption("the game")
 FPS = 60
 VEL = 7
@@ -21,7 +21,7 @@ YELLOW = (255, 255, 0)
 # BULLET_HIT_SOUND = p.mixer.Sound("Assets/Grenade+1.mp3")
 # BULLER_FIRE_SOUND = p.mixer.Sound("Assets/Gun+Silencer.mp3")
 
-BORDER = p.Rect(WINDOW_WIDTH // 2 - 5, 0, 10, WINDOW_HEIGHT)
+BORDER = p.Rect(SPACE_WINDOW_WIDTH // 2 - 5, 0, 10, SPACE_WINDOW_HEIGHT)
 
 HEALTH_FONT = p.font.SysFont("comicsans", 40)
 WINNER_FONT = p.font.SysFont("comicsans", 100)
@@ -42,7 +42,7 @@ RED_SPACESHIP = p.transform.rotate(p.transform.scale(
     RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
 SPACE = p.transform.scale(p.image.load(os.path.join(
-    "Assets", "space.png")), (WINDOW_WIDTH, WINDOW_HEIGHT))
+    "Assets", "space.png")), (SPACE_WINDOW_WIDTH, SPACE_WINDOW_HEIGHT))
 
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
@@ -53,7 +53,7 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
         f"Health: {str(red_health)}", 1, WHITE)
     yellow_health_text = HEALTH_FONT.render(
         f"Health: {str(yellow_health)}", 1, WHITE)
-    screen.blit(red_health_text, (WINDOW_WIDTH -
+    screen.blit(red_health_text, (SPACE_WINDOW_WIDTH -
                 red_health_text.get_width() - 10, 10))
     screen.blit(yellow_health_text, (10, 10))
 
@@ -73,18 +73,18 @@ def yellow_handle_movement(key_pressed, yellow):
         yellow.x += VEL
     if key_pressed[p.K_w] and yellow.y - VEL > 0:  # UP
         yellow.y -= VEL
-    if key_pressed[p.K_s] and yellow.y + VEL + yellow.width < WINDOW_HEIGHT:  # DOWN
+    if key_pressed[p.K_s] and yellow.y + VEL + yellow.width < SPACE_WINDOW_HEIGHT:  # DOWN
         yellow.y += VEL
 
 
 def red_handle_movement(key_pressed, red):
     if key_pressed[p.K_LEFT] and red.x - VEL > BORDER.x + BORDER.width:  # LEFT
         red.x -= VEL
-    if key_pressed[p.K_RIGHT] and red.x + VEL + red.width < WINDOW_WIDTH:  # RIGHT
+    if key_pressed[p.K_RIGHT] and red.x + VEL + red.width < SPACE_WINDOW_WIDTH:  # RIGHT
         red.x += VEL
     if key_pressed[p.K_UP] and red.y - VEL > 0:  # UP
         red.y -= VEL
-    if key_pressed[p.K_DOWN] and red.y + VEL + red.height < WINDOW_HEIGHT:  # DOWN
+    if key_pressed[p.K_DOWN] and red.y + VEL + red.height < SPACE_WINDOW_HEIGHT:  # DOWN
         red.y += VEL
 
 
@@ -94,7 +94,7 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
         if red.colliderect(bullet):
             p.event.post(p.event.Event(RED_HIT))
             yellow_bullets.remove(bullet)
-        elif bullet.x > WINDOW_WIDTH:
+        elif bullet.x > SPACE_WINDOW_WIDTH:
             yellow_bullets.remove(bullet)
     for bullet in red_bullets:
         bullet.x -= BULLETS_VEL
@@ -107,10 +107,10 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
 
 def draw_winner(text):
     draw_text = WINNER_FONT.render(text, 1, WHITE)
-    screen.blit(draw_text, (WINDOW_WIDTH // 2 - draw_text.get_width() //
-                2, WINDOW_HEIGHT // 2 - draw_text.get_height() // 2))
+    screen.blit(draw_text, (SPACE_WINDOW_WIDTH // 2 - draw_text.get_width() //
+                2, SPACE_WINDOW_HEIGHT // 2 - draw_text.get_height() // 2))
     p.display.update()
-    p.time.delay(5000)
+    p.time.delay(3000)
 
 
 def main():
