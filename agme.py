@@ -8,8 +8,8 @@ WINDOW_HEIGHT = 500
 screen = p.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 p.display.set_caption("the game")
 FPS = 60
-VEL = 5
-BULLETS_VEL = 7
+VEL = 7
+BULLETS_VEL = 12
 MAX_BULLETS = 5
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
