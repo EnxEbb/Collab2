@@ -2,13 +2,14 @@
 import pygame as p
 import math
 import datetime
+import os
 
 p.init()
 FPS = 60
 screen = p.display.set_mode((800, 800))
 p.display.set_caption("the clock :3")
 clock = p.time.Clock()
-bg = p.transform.scale(p.image.load("clock.jpg"), (800, 800))
+bg = p.transform.scale(p.image.load(os.path.join("Assets", "clock.jpg")), (800, 800))
 
 
 def convertDegree(R, theta):
