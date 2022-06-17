@@ -1,5 +1,10 @@
-from msilib.schema import TextStyle
+"""
+This class handles user input and switches screens if needed.
+"""
+
 import pygame as p
+from menu import *
+
 
 class Game():
     def __init__(self):
@@ -11,6 +16,10 @@ class Game():
         self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.font_name = "8-BIT WONDER.TTF"
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
+        self.main_menu = MainMenu(self)
+        self.options = OptionsMenu(self)
+        self.credits = CreditsMenu(self)
+        self.curr_menu = self.main_menu
 
     def game_loop(self):
         while self.playing:
@@ -18,7 +27,8 @@ class Game():
             if self.START_KEY:
                 self.playing = False
             self.display.fill(self.BLACK)
-            self.draw_text("Thanks for playing :3", 50, self.DISPLAY_W // 2, self.DISPLAY_H // 2)
+            self.draw_text("Thanks for playing :3", 50,
+                           self.DISPLAY_W // 2, self.DISPLAY_H // 2)
             self.screen.blit(self.display, (0, 0))
             p.display.update()
             self.reset_keys()
@@ -27,19 +37,20 @@ class Game():
         for event in p.event.get():
             if event.type == p.QUIT:
                 self.running, self.playing = False, False
+                self.curr_menu.run_display = False
             if event.type == p.KEYDOWN:
-                if event.type == p.K_SPACE:
+                if event.key == p.K_RETURN:
                     self.START_KEY = True
-                if event.type == p.K_BACKSPACE:
+                if event.key == p.K_BACKSPACE:
                     self.BACK_KEY = True
-                if event.type == p.K_DOWN:
+                if event.key == p.K_DOWN:
                     self.DOWN_KEY = True
-                if event.type == p.K_UP:
+                if event.key == p.K_UP:
                     self.UP_KEY = True
-    
+
     def reset_keys(self):
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-    
+
     def draw_text(self, text, size, x, y):
         font = p.font.SysFont(self.font_name, size)
         text_surface = font.render(text, True, self.WHITE)
