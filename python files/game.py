@@ -16,7 +16,7 @@ class Game():
         self.DISPLAY_W, self.DISPLAY_H = 900, 500
         self.display = p.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
-        self.font_name = "Arial"
+        self.font_name = "8-BIT WONDER.TTF"
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
         self.COLOR_BG = (10, 10, 10)
         self.COLOR_GRID = (40, 40, 40)
