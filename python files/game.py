@@ -29,7 +29,6 @@ class Game():
 
     def update(self, screen, cells, size, with_progress=False):
         updated_cells = np.zeros((cells.shape[0], cells.shape[1]))
-
         for row, col in np.ndindex(cells.shape):
             alive = np.sum(cells[row - 1: row + 2, col - 1: col + 2]) - cells[row, col]
             color = self.COLOR_BG if cells[row, col] == 0 else self.COLOR_ALIVE_NEXT
@@ -54,9 +53,9 @@ class Game():
 
     def game_loop(self):
         if self.playing:
-            cells = np.zeros((60, 80))
+            self.cells = np.zeros((60, 80))
             self.screen.fill(self.COLOR_GRID)
-            self.update(self, self.screen, cells, 10)
+            self.update(self, self.screen, self.cells, 10)
             running = False
             p.display.update()
             for event in p.event.get():
@@ -66,17 +65,17 @@ class Game():
                 if event.type == p.KEYDOWN:
                     if event.key == p.K_SPACE:
                         running = not running
-                        self.update(self, self.screen, cells, 10)
+                        self.update(self, self.screen, self.cells, 10)
                         p.display.update()
                 if p.mouse.get_pressed()[0]:
                     pos = p.mouse.get_pos()
-                    cells[pos[1] // 10, pos[0] // 10] = 1
-                    self.update(self, self.screen, cells, 10)
+                    self.cells[pos[1] // 10, pos[0] // 10] = 1
+                    self.update(self, self.screen, self.cells, 10)
                     p.display.update()
             self.screen.fill(self.COLOR_GRID)
 
             if running: 
-                cells = self.update(self, self.screen, cells, 10, with_progress=True)
+                self.cells = self.update(self, self.screen, self.cells, 10, with_progress=True)
                 p.display.update()
             time.sleep(0.001)
 
