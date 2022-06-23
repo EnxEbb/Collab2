@@ -14,7 +14,7 @@ class Game():
     def __init__(self):
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 900, 500
+        self.DISPLAY_W, self.DISPLAY_H = 800, 600
         self.display = p.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.font_name = "8-BIT WONDER.TTF"
@@ -30,37 +30,35 @@ class Game():
         self.cells = np.zeros((60, 80))
 
     def game_loop(self):
-        self.screen.fill(self.COLOR_GRID)
-        Life.update(self.screen, self.cells, 10)
+        run = False
+        while self.playing:
+            self.screen.fill(self.COLOR_GRID)
+            Life.update(Life, self.screen, self.cells, 10)
+            p.display.update()
 
-        p.display.update()
-
-        running = False
-        if self.playing:
-            for event in p.event.get():
-                if event.type == p.QUIT:
-                    self.running, self.playing = False, False
-                    self.curr_menu.run_display = False
-                elif event.type == p.KEYDOWN:
-                    if event.key == p.K_SPACE:
-                        running = not running
+            if self.playing:
+                for event in p.event.get():
+                    if event.type == p.QUIT:
+                        self.running, self.playing = False, False
+                        self.curr_menu.run_display = False
+                    elif event.type == p.KEYDOWN:
+                        if event.key == p.K_SPACE:
+                            run = not run
+                            Life.update(Life, self.screen, self.cells, 10)
+                            p.display.update()
+                    if p.mouse.get_pressed()[0]:
+                        pos = p.mouse.get_pos()
+                        self.cells[pos[1] // 10, pos[0] // 10] = 1
                         Life.update(Life, self.screen, self.cells, 10)
                         p.display.update()
-                if p.mouse.get_pressed()[0]:
-                    pos = p.mouse.get_pos()
-                    self.cells[pos[1] // 10, pos[0] // 10] = 1
-                    Life.update(Life, self.screen, self.cells, 10)
+                self.screen.fill(self.COLOR_GRID)
+                if run:
+                    self.cells = Life.update(
+                        Life, self.screen, self.cells, 10, with_progress=True)
                     p.display.update()
-            self.screen.fill(self.COLOR_GRID)
+                time.sleep(0.001)
+            print(run)
 
-            if running:
-                self.cells = Life.update(Life, self.screen, self.cells, 10, with_progress = True)
-                p.display.update()
-            time.sleep(0.001)
-
-
-
-            
 
     def check_events(self):
         for event in p.event.get():
