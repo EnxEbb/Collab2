@@ -48,7 +48,7 @@ class Blackjack:
 
 # game loop
 
-def main():
+class gulug:
     playerIn = True
     dealerIn = True
     dealerHand = []
@@ -56,49 +56,48 @@ def main():
     deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A']
     blackie = Blackjack(deck, playerHand, dealerHand)
-    for _ in range(2):
-        blackie.dealCard(blackie.dealerHand, blackie.deck)
-        blackie.dealCard(blackie.playerHand, blackie.deck)
 
-    while playerIn or dealerIn:
-        print(
-            f"Dealer has {blackie.revealDealerHand(blackie.dealerHand)} and X")
-        print(
-            f"You have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)}")
-        if playerIn:
-            stayOrHit = input("1: Stay\n2: Hit\n")
-        if blackie.total(blackie.dealerHand) > 16:
-            dealerIn = False
-        else:
+    def Dealing(self, blackie):
+        for _ in range(2):
             blackie.dealCard(blackie.dealerHand, blackie.deck)
-        if stayOrHit == '1':
-            playerIn = False
-        else:
             blackie.dealCard(blackie.playerHand, blackie.deck)
-        if blackie.total(blackie.playerHand) >= 21:
-            break
-        elif blackie.total(blackie.dealerHand) >= 21:
-            break
 
-    if blackie.total(blackie.playerHand) == 21:
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("BlackJack! You win!")
-    elif blackie.total(blackie.dealerHand) == 21:
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("BlackJack! Dealer wins!")
-    elif blackie.total(blackie.playerHand) > 21:
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("You bust Dealer wins")
-    elif blackie.total(blackie.dealerHand) > 21:
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("Dealer busts! You win!")
-    elif 21 - blackie.total(blackie.dealerHand) < 21 - blackie.total(blackie.playerHand):
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("Dealer wins")
-    elif 21 - blackie.total(blackie.dealerHand) > 21 - blackie.total(blackie.playerHand):
-        print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
-        print("You win")
+    def RUN(self, blackie):
+        while playerIn or dealerIn:
+            print(
+                f"Dealer has {blackie.revealDealerHand(blackie.dealerHand)} and X")
+            print(
+                f"You have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)}")
+            if playerIn:
+                stayOrHit = input("1: Stay\n2: Hit\n")
+            if blackie.total(blackie.dealerHand) > 16:
+                dealerIn = False
+            else:
+                blackie.dealCard(blackie.dealerHand, blackie.deck)
+            if stayOrHit == '1':
+                playerIn = False
+            else:
+                blackie.dealCard(blackie.playerHand, blackie.deck)
+            if blackie.total(blackie.playerHand) >= 21:
+                break
+            elif blackie.total(blackie.dealerHand) >= 21:
+                break
 
-
-if __name__ == "__main__":
-    main()
+        if blackie.total(blackie.playerHand) == 21:
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("BlackJack! You win!")
+        elif blackie.total(blackie.dealerHand) == 21:
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("BlackJack! Dealer wins!")
+        elif blackie.total(blackie.playerHand) > 21:
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("You bust Dealer wins")
+        elif blackie.total(blackie.dealerHand) > 21:
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("Dealer busts! You win!")
+        elif 21 - blackie.total(blackie.dealerHand) < 21 - blackie.total(blackie.playerHand):
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("Dealer wins")
+        elif 21 - blackie.total(blackie.dealerHand) > 21 - blackie.total(blackie.playerHand):
+            print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
+            print("You win")
