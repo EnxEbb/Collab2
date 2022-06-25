@@ -6,6 +6,7 @@ import pygame as p
 from menu import *
 import time
 import numpy as np
+from lifeGame import Life
 p.font.init()
 
 
@@ -13,12 +14,12 @@ class Game():
     def __init__(self):
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 900, 500
+        self.DISPLAY_W, self.DISPLAY_H = 800, 600
         self.display = p.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.font_name = "8-BIT WONDER.TTF"
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
-        self.COLOR_BG = (10, 10, 10)
+        self.COLOR_BG = (0, 0, 0)
         self.COLOR_GRID = (40, 40, 40)
         self.COLOR_DIE_NEXT = (170, 170, 170)
         self.COLOR_ALIVE_NEXT = (255, 255, 255)
@@ -26,58 +27,37 @@ class Game():
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.curr_menu = self.main_menu
-
-    def update(self, screen, cells, size, with_progress=False):
-        updated_cells = np.zeros((cells.shape[0], cells.shape[1]))
-        for row, col in np.ndindex(cells.shape):
-            alive = np.sum(cells[row - 1: row + 2, col - 1: col + 2]) - cells[row, col]
-            color = self.COLOR_BG if cells[row, col] == 0 else self.COLOR_ALIVE_NEXT
-
-            if cells[row, col] == 1:
-                if alive < 2 or alive > 3:
-                    if with_progress:
-                        color = self.COLOR_DIE_NEXT
-                elif 2 <= alive <= 3:
-                    updated_cells[row, col] = 1
-                    if with_progress:
-                        color = self.COLOR_ALIVE_NEXT
-            else:
-                if alive == 3:
-                    updated_cells[row, col] = 1
-                    if with_progress:
-                        color = self.COLOR_ALIVE_NEXT
-
-            p.draw.rect(screen, color, (col * size, row * size, size - 1, size - 1))
-
-        return updated_cells
+        self.cells = np.zeros((60, 80))
 
     def game_loop(self):
-        if self.playing:
-            self.cells = np.zeros((60, 80))
+        run = False
+        while self.playing:
             self.screen.fill(self.COLOR_GRID)
-            self.update(self, self.screen, self.cells, 10)
-            running = False
+            Life.update(Life, self.screen, self.cells, 10)
             p.display.update()
-            for event in p.event.get():
-                if event.type == p.QUIT:
-                    self.running, self.playing = False, False
-                    self.curr_menu.run_display = False
-                if event.type == p.KEYDOWN:
-                    if event.key == p.K_SPACE:
-                        running = not running
-                        self.update(self, self.screen, self.cells, 10)
-                        p.display.update()
-                if p.mouse.get_pressed()[0]:
-                    pos = p.mouse.get_pos()
-                    self.cells[pos[1] // 10, pos[0] // 10] = 1
-                    self.update(self, self.screen, self.cells, 10)
-                    p.display.update()
-            self.screen.fill(self.COLOR_GRID)
 
-            if running: 
-                self.cells = self.update(self, self.screen, self.cells, 10, with_progress=True)
-                p.display.update()
-            time.sleep(0.001)
+            if self.playing:
+                for event in p.event.get():
+                    if event.type == p.QUIT:
+                        self.running, self.playing = False, False
+                        self.curr_menu.run_display = False
+                    elif event.type == p.KEYDOWN:
+                        if event.key == p.K_SPACE:
+                            run = not run
+                            Life.update(Life, self.screen, self.cells, 10)
+                            p.display.update()
+                    if p.mouse.get_pressed()[0]:
+                        pos = p.mouse.get_pos()
+                        self.cells[pos[1] // 10, pos[0] // 10] = 1
+                        Life.update(Life, self.screen, self.cells, 10)
+                        p.display.update()
+                self.screen.fill(self.COLOR_GRID)
+                if run:
+                    self.cells = Life.update(
+                        Life, self.screen, self.cells, 10, with_progress=True)
+                    p.display.update()
+                time.sleep(0.001)
+            print(run)
 
 
     def check_events(self):
