@@ -25,7 +25,7 @@ class Blackjack:
         ace_11s = 0
         face = ['J', 'Q', 'K']
         for card in turn:
-            if card in range(1, 11):
+            if card in range(11):
                 total += card
             elif card in face:
                 total += 10
@@ -49,25 +49,25 @@ class Blackjack:
 # game loop
 
 class gulug:
-    playerIn = True
-    dealerIn = True
-    dealerHand = []
-    playerHand = []
+    #playerIn = True
+    #dealerIn = True
+    #dealerHand = []
+    #playerHand = []
     deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A']
-    blackie = Blackjack(deck, playerHand, dealerHand)
+    #blackie = Blackjack(deck, playerHand, dealerHand)
 
     def Dealing(self, blackie):
         for _ in range(2):
             blackie.dealCard(blackie.dealerHand, blackie.deck)
             blackie.dealCard(blackie.playerHand, blackie.deck)
 
-    def RUN(self, blackie):
+    def RUN(self, blackie, playerIn, dealerIn):
         while playerIn or dealerIn:
             print(
                 f"Dealer has {blackie.revealDealerHand(blackie.dealerHand)} and X")
             print(
-                f"You have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)}")
+                f"You have {blackie.playerHand}")
             if playerIn:
                 stayOrHit = input("1: Stay\n2: Hit\n")
             if blackie.total(blackie.dealerHand) > 16:
@@ -101,3 +101,13 @@ class gulug:
         elif 21 - blackie.total(blackie.dealerHand) > 21 - blackie.total(blackie.playerHand):
             print(f"\nYou have {blackie.playerHand} for a total of {blackie.total(blackie.playerHand)} and the dealer has {blackie.dealerHand} for a total of {blackie.total(blackie.dealerHand)}")
             print("You win")
+
+
+playerIn = True
+dealerIn = True
+dealerHand = []
+playerHand = []
+Start = gulug()
+blackie = Blackjack(gulug.deck, playerHand, dealerHand)
+Start.Dealing(blackie)
+Start.RUN(blackie, playerIn, dealerIn)
