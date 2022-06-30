@@ -14,7 +14,7 @@ class Game():
     def __init__(self):
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 800, 600
+        self.DISPLAY_W, self.DISPLAY_H = 900, 500
         self.display = p.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.font_name = "8-BIT WONDER.TTF"
@@ -27,7 +27,7 @@ class Game():
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.curr_menu = self.main_menu
-        self.cells = np.zeros((60, 80))
+        self.cells = np.zeros((50, 90))
 
     def game_loop(self):
         run = False
@@ -57,7 +57,6 @@ class Game():
                         Life, self.screen, self.cells, 10, with_progress=True)
                     p.display.update()
                 time.sleep(0.001)
-            print(run)
 
 
     def check_events(self):
