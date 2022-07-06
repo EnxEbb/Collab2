@@ -6,7 +6,7 @@ import pygame as p
 from menu import *
 import time
 import numpy as np
-from lifeGame import Life
+# from lifeGame import Life
 p.font.init()
 
 
@@ -30,33 +30,15 @@ class Game():
         self.cells = np.zeros((50, 90))
 
     def game_loop(self):
-        run = False
         while self.playing:
-            self.screen.fill(self.COLOR_GRID)
-            Life.update(Life, self.screen, self.cells, 10)
+            self.check_events()
+            if self.START_KEY:
+                self.playing = False
+            self.display.fill(self.BLACK)
+            self.draw_text('where we make game options now.', 30, self.DISPLAY_W // 2, self.DISPLAY_H // 2)
+            self.screen.blit(self.display, (0, 0))
             p.display.update()
-
-            if self.playing:
-                for event in p.event.get():
-                    if event.type == p.QUIT:
-                        self.running, self.playing = False, False
-                        self.curr_menu.run_display = False
-                    elif event.type == p.KEYDOWN:
-                        if event.key == p.K_SPACE:
-                            run = not run
-                            Life.update(Life, self.screen, self.cells, 10)
-                            p.display.update()
-                    if p.mouse.get_pressed()[0]:
-                        pos = p.mouse.get_pos()
-                        self.cells[pos[1] // 10, pos[0] // 10] = 1
-                        Life.update(Life, self.screen, self.cells, 10)
-                        p.display.update()
-                self.screen.fill(self.COLOR_GRID)
-                if run:
-                    self.cells = Life.update(
-                        Life, self.screen, self.cells, 10, with_progress=True)
-                    p.display.update()
-                time.sleep(0.001)
+            self.reset_keys()
 
 
     def check_events(self):
