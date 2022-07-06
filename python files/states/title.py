@@ -1,5 +1,6 @@
 from states.state import State
 from states.game_world import game_world
+from states.lifeGame import Life
 import pygame as p
 import os
 
@@ -10,7 +11,7 @@ class Title(State):
         self.mid_w, self.mid_h = self.game.GAME_W // 2, self.game.GAME_H // 2
         self.run_display = True
         # Set the cursor and menu states
-        self.menu_options = {0: 'game1', 1: 'game2', 2: 'game3'}
+        self.menu_options = {0: 'Game1', 1: 'Game2', 2: 'Game3', 3: 'Exit'}
         self.index = 0
         self.cursor_img = p.image.load(os.path.join('Assets', 'cursor.png'))
         self.cursor_rect = self.cursor_img.get_rect()
@@ -20,8 +21,7 @@ class Title(State):
     def update(self, dt, action):
         self.update_cursor(action)
         if action['start']:
-            new_state = game_world(self.game)
-            new_state.enter_state()
+            self.transition_state()
         if action['action2']:
             self.exit_state()
         self.game.reset_keys()
@@ -30,11 +30,23 @@ class Title(State):
         display.fill((0, 0, 0))
         # self.game.draw_text(display, "Game states demo.", (255, 255, 255),
         #                     self.game.GAME_W // 2, self.game.GAME_H // 2)
-        self.game.draw_text(display, 'game1', (255, 255, 255), self.mid_w, self.mid_h - 31)
-        self.game.draw_text(display, 'game2', (255, 255, 255), self.mid_w, self.mid_h)
-        self.game.draw_text(display, 'game3', (255, 255, 255), self.mid_w, self.mid_h + 31)
+        self.game.draw_text(display, 'Game1', (255, 255, 255), self.mid_w, self.mid_h - 31)
+        self.game.draw_text(display, 'Game2', (255, 255, 255), self.mid_w, self.mid_h)
+        self.game.draw_text(display, 'Game3', (255, 255, 255), self.mid_w, self.mid_h + 31)
+        self.game.draw_text(display, 'Exit', (255, 255, 255), self.mid_w, self.mid_h + 62)
         display.blit(self.cursor_img, self.cursor_rect)
 
+    def transition_state(self):
+        if self.menu_options[self.index] == 'Game1':
+            new_state = game_world(self.game)
+            new_state.enter_state()
+        elif self.menu_options[self.index] == 'Game2':
+            new_state = Life(self.game)
+            new_state.enter_state()
+        elif self.menu_options[self.index] == 'Game3':
+            pass
+        elif self.menu_options[self.index] == 'Exit':
+                self.game.running, self.game.playing = False, False
         
 
     def update_cursor(self, action):

@@ -93,11 +93,4 @@ class Game():
     def load_states(self):
         self.title_screen = Title(self)
         self.state_stack.append(self.title_screen)
-
-        
-if __name__ == '__main__':
-    g = Game()
-    while g.running:
-        g.game_loop()
-
-                
+     
