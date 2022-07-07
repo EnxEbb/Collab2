@@ -3,83 +3,94 @@ This class handles user input and switches screens if needed.
 """
 
 import pygame as p
-from menu import *
 import time
-import numpy as np
-from lifeGame import Life
-p.font.init()
+import os
+
+from states.title import Title
 
 
 class Game():
     def __init__(self):
-        self.running, self.playing = True, False
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 900, 500
-        self.display = p.Surface((self.DISPLAY_W, self.DISPLAY_H))
-        self.screen = p.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
-        self.font_name = "8-BIT WONDER.TTF"
-        self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
-        self.COLOR_BG = (0, 0, 0)
-        self.COLOR_GRID = (40, 40, 40)
-        self.COLOR_DIE_NEXT = (170, 170, 170)
-        self.COLOR_ALIVE_NEXT = (255, 255, 255)
-        self.main_menu = MainMenu(self)
-        self.options = OptionsMenu(self)
-        self.credits = CreditsMenu(self)
-        self.curr_menu = self.main_menu
-        self.cells = np.zeros((50, 90))
+        p.init()
+        self.GAME_W, self.GAME_H = 480, 270
+        self.SCREEN_W, self.SCREEN_H = 900, 500
+        self.display = p.Surface((self.GAME_W, self.GAME_H))
+        self.screen = p.display.set_mode((self.SCREEN_W, self.SCREEN_H))
+        self.running, self.playing = True, True
+        self.action = {'left': False, 'right': False, 'up': False, 'down': False, 'action': False, 'action2': False, 'start': False}
+        self.dt, self.prev_time = 0, 0
+        self.state_stack = []
+        self.font = p.font.SysFont("lucidasans", 15)
+        self.load_states()
 
     def game_loop(self):
-        run = False
         while self.playing:
-            self.screen.fill(self.COLOR_GRID)
-            Life.update(Life, self.screen, self.cells, 10)
-            p.display.update()
+            self.get_dt()
+            self.get_events()
+            self.update()
+            self.render()
 
-            if self.playing:
-                for event in p.event.get():
-                    if event.type == p.QUIT:
-                        self.running, self.playing = False, False
-                        self.curr_menu.run_display = False
-                    elif event.type == p.KEYDOWN:
-                        if event.key == p.K_SPACE:
-                            run = not run
-                            Life.update(Life, self.screen, self.cells, 10)
-                            p.display.update()
-                    if p.mouse.get_pressed()[0]:
-                        pos = p.mouse.get_pos()
-                        self.cells[pos[1] // 10, pos[0] // 10] = 1
-                        Life.update(Life, self.screen, self.cells, 10)
-                        p.display.update()
-                self.screen.fill(self.COLOR_GRID)
-                if run:
-                    self.cells = Life.update(
-                        Life, self.screen, self.cells, 10, with_progress=True)
-                    p.display.update()
-                time.sleep(0.001)
-
-
-    def check_events(self):
+    def get_events(self):
         for event in p.event.get():
             if event.type == p.QUIT:
                 self.running, self.playing = False, False
-                self.curr_menu.run_display = False
             if event.type == p.KEYDOWN:
+                if event.key == p.K_ESCAPE:
+                    self.playing, self.running = False, False
+                if event.key == p.K_a:
+                    self.action['left'] = True
+                if event.key == p.K_d:
+                    self.action['right'] = True
+                if event.key == p.K_w:
+                    self.action['up'] = True
+                if event.key == p.K_s:
+                    self.action['down'] = True
+                if event.key == p.K_p:
+                    self.action['action'] = True
+                if event.key == p.K_o:
+                    self.action['action2'] = True
                 if event.key == p.K_RETURN:
-                    self.START_KEY = True
-                if event.key == p.K_BACKSPACE:
-                    self.BACK_KEY = True
-                if event.key == p.K_DOWN:
-                    self.DOWN_KEY = True
-                if event.key == p.K_UP:
-                    self.UP_KEY = True
-
-    def reset_keys(self):
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-
-    def draw_text(self, text, size, x, y):
-        font = p.font.SysFont(self.font_name, size)
-        text_surface = font.render(text, True, self.WHITE)
+                    self.action['start'] = True
+            if event.type == p.KEYUP:
+                if event.key == p.K_a:
+                    self.action['left'] = False
+                if event.key == p.K_d:
+                    self.action['right'] = False
+                if event.key == p.K_w:
+                    self.action['up'] = False
+                if event.key == p.K_s:
+                    self.action['down'] = False
+                if event.key == p.K_p:
+                    self.action['action'] = False
+                if event.key == p.K_o:
+                    self.action['action2'] = False
+                if event.key == p.K_RETURN:
+                    self.action['start'] = False
+        
+    def update(self):
+        self.state_stack[-1].update(self.dt, self.action)
+    
+    def render(self):
+        self.state_stack[-1].render(self.display)
+        self.screen.blit(p.transform.scale(self.display, (self.SCREEN_W, self.SCREEN_H)), (0, 0))
+        p.display.flip()
+    
+    def get_dt(self):
+        now = time.time()
+        self.dt = now - self.prev_time
+        self.prev_time = now
+    
+    def draw_text(self, surface, text, color, x, y):
+        text_surface = self.font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
-        self.display.blit(text_surface, text_rect)
+        surface.blit(text_surface, text_rect)
+
+    def reset_keys(self):
+        for action in self.action:
+            self.action[action] = False
+        
+    def load_states(self):
+        self.title_screen = Title(self)
+        self.state_stack.append(self.title_screen)
+     
