@@ -1,6 +1,7 @@
 from states.state import State
 from states.game_world import game_world
 from states.lifeGame import Life
+import numpy as np
 import pygame as p
 import os
 
