@@ -65,7 +65,7 @@ class Life(State):
                     p.display.update()
             self.game.screen.fill(grid)
             if run:
-                self.cells = Life.update(self, self.game.screen, self.cells, 10)
+                self.cells = Life.update(self.game.screen, self.cells, 10)
                 p.display.update()
             time.sleep(0.001)
                 

@@ -27,6 +27,7 @@ class Game():
         self.state_stack = []
         self.font = p.font.SysFont("lucidasans", 15)
         self.load_states()
+        self.cells = np.zeros((50, 90))
 
     def game_loop(self):
         while self.playing:
