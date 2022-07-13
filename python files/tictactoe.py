@@ -118,7 +118,7 @@ def draw_horizontal_winning_line(row, player):
     if player == 1:
         color = CIRCLE_COLOR
     elif player == 2:
-        color == CROSS_COLOR
+        color = CROSS_COLOR
 
     pygame.draw.line(screen, color, (15, posY), (WIDTH - 15, posY), 15)
 
@@ -127,7 +127,7 @@ def draw_asc_diagonal(player):
     if player == 1:
         color = CIRCLE_COLOR
     elif player == 2:
-        color == CROSS_COLOR
+        color = CROSS_COLOR
 
     pygame.draw.line(screen, color, (15, HEIGHT - 15), (WIDTH - 15, 15), 15)
 
@@ -136,7 +136,7 @@ def draw_desc_diagonal(player):
     if player == 1:
         color = CIRCLE_COLOR
     elif player == 2:
-        color == CROSS_COLOR
+        color = CROSS_COLOR
 
     pygame.draw.line(screen, color, (15, 15), (WIDTH - 15, HEIGHT - 15), 15)
 

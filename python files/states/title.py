@@ -1,14 +1,16 @@
 from states.state import State
 from states.game_world import game_world
 from states.lifeGame import Life
+from states.blackRunner import black_runner
 import numpy as np
 import pygame as p
 import os
 
+
 class Title(State):
     def __init__(self, game):
         State.__init__(self, game)
-        # Set the menu 
+        # Set the menu
         self.mid_w, self.mid_h = self.game.GAME_W // 2, self.game.GAME_H // 2
         self.run_display = True
         # Set the cursor and menu states
@@ -31,10 +33,14 @@ class Title(State):
         display.fill((0, 0, 0))
         # self.game.draw_text(display, "Game states demo.", (255, 255, 255),
         #                     self.game.GAME_W // 2, self.game.GAME_H // 2)
-        self.game.draw_text(display, 'Game1', (255, 255, 255), self.mid_w, self.mid_h - 31)
-        self.game.draw_text(display, 'Game2', (255, 255, 255), self.mid_w, self.mid_h)
-        self.game.draw_text(display, 'Game3', (255, 255, 255), self.mid_w, self.mid_h + 31)
-        self.game.draw_text(display, 'Exit', (255, 255, 255), self.mid_w, self.mid_h + 62)
+        self.game.draw_text(display, 'Game1', (255, 255, 255),
+                            self.mid_w, self.mid_h - 31)
+        self.game.draw_text(display, 'Game2', (255, 255,
+                            255), self.mid_w, self.mid_h)
+        self.game.draw_text(display, 'Game3', (255, 255, 255),
+                            self.mid_w, self.mid_h + 31)
+        self.game.draw_text(display, 'Exit', (255, 255, 255),
+                            self.mid_w, self.mid_h + 62)
         display.blit(self.cursor_img, self.cursor_rect)
 
     def transition_state(self):
@@ -45,10 +51,10 @@ class Title(State):
             new_state = Life(self.game)
             new_state.enter_state()
         elif self.menu_options[self.index] == 'Game3':
-            pass
+            new_state = black_runner(self.game)
+            new_state.enter_state()
         elif self.menu_options[self.index] == 'Exit':
-                self.game.running, self.game.playing = False, False
-        
+            self.game.running, self.game.playing = False, False
 
     def update_cursor(self, action):
         if action['down']:
