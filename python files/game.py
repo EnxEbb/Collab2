@@ -3,6 +3,7 @@ This class handles user input and switches screens if needed.
 """
 
 import pygame as p
+import numpy as np
 import time
 import os
 
@@ -14,6 +15,10 @@ class Game():
         p.init()
         self.GAME_W, self.GAME_H = 480, 270
         self.SCREEN_W, self.SCREEN_H = 900, 500
+        self.COLOR_BG = (0, 0, 0)
+        self.COLOR_GRID = (40, 40, 40)
+        self.COLOR_DIE_NEXT = (170, 170, 170)
+        self.COLOR_ALIVE_NEXT = (255, 255, 255)
         self.display = p.Surface((self.GAME_W, self.GAME_H))
         self.screen = p.display.set_mode((self.SCREEN_W, self.SCREEN_H))
         self.running, self.playing = True, True
@@ -22,6 +27,7 @@ class Game():
         self.state_stack = []
         self.font = p.font.SysFont("lucidasans", 15)
         self.load_states()
+        self.cells = np.zeros((50, 90))
 
     def game_loop(self):
         while self.playing:
